@@ -433,4 +433,28 @@ class UserController extends Controller
         } 
         // return redirect('/'); 
     } 
+
+    Public function confirm_ajax(string $id){
+        $user = UserModel::find($id);
+        return view('user.confim_ajax', ['user' => $user]);
+    }
+
+    public function delete_ajax(Request $request, $id){
+        if($request -> ajax() || $request -> wantsJson()){
+            $user = UserModel::find($id);
+            if($user){
+                $user -> delete();
+                return response() -> json([
+                    'status' => true,
+                    'message' => 'Data berhasil dihapus'
+                ]);
+            } else {
+                return response() -> json([
+                    'status' => false,
+                    'message' => 'data tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
 }
