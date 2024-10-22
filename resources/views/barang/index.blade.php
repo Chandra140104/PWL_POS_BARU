@@ -6,6 +6,7 @@
             <h3 class="card-title">{{ $page->title }}</h3>
             <div class="card-tools">
                 <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+                <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah  Ajax</button>
             </div>
         </div>
         <div class="card-body">
@@ -38,25 +39,28 @@
                     <th>ID</th>
                     <th>Barang Kode</th>
                     <th>Barang Nama</th>
+                    <th>Harga Beli</th>
+                    <th>Harga Jual</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
         </table>
     </div>
     </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 @push('css')
 @endpush
 @push('js')
     <script>
-        function modalAction(url = ''){ 
-      $('#myModal').load(url,function(){ 
-          $('#myModal').modal('show'); 
-      }); 
-    }
-        var dataBarang;
+        function modalAction(url = '') {
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
+            });
+        }
+        var dataUser;
         $(document).ready(function() {
-            dataBarang = $('#table_barang').DataTable({
+            dataUser = $('#table_barang').DataTable({
                 // serverSide: true, jika ingin menggunakan server side processing 
                 serverSide: true,
                 ajax: {
@@ -86,6 +90,14 @@
                     orderable: true,
                     searchable: true
                 },{
+                    data: "harga_beli",
+                    orderable: true,
+                    searchable: true
+                },{
+                    data: "harga_jual",
+                    orderable: true,
+                    searchable: true
+                },{
                     data: "aksi",
                     className: "",
                     orderable: false,
@@ -93,8 +105,8 @@
                 }]
             });
         });
-        $('#kategori_id').on('change', function(){
-                dataBarang.ajax.reload();
+            $('#kategori_id', '#kategori_kode', '#harga_beli', '#harga_jual').on('change', function(){
+                dataUser.ajax.reload();
         });
     </script>
 @endpush
