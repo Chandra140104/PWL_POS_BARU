@@ -195,7 +195,9 @@ class UserController extends Controller
         ];
 
         $activeMenu= 'user'; //menu yg aktif
-        return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        $level = LevelModel::all();
+
+        return view('user.index', ['breadcrumb' => $breadcrumb, 'page' => $page,'level'=>$level ,'activeMenu' => $activeMenu]);
     }
     
     public function tambah(){
@@ -238,6 +240,10 @@ class UserController extends Controller
     public function list(Request $request){
         $users = UserModel::select('user_id', 'username', 'nama', 'level_id')
             -> with('level');
+
+        if($request->level_id){
+            $users->where('level_id', $request->level_id);
+        }
         return DataTables::of($users)
         ->addIndexColumn()  
         ->addColumn('aksi', function ($user) { 
