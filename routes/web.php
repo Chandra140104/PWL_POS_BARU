@@ -28,16 +28,15 @@ use App\Http\Controllers\AuthController;
 Route::pattern('id', '[0-9]+');
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
-Route::get('/login', [AuthController::class, 'showLoginForm']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
+Route::middleware(['authorize:ADM'])->group(function () {
 
-Route::middleware(['auth'])->group(function () {
-
-    Route::get('/', [UserController::class, 'index']); //halaman awal
+    Route::get('/', [WelcomeController::class, 'index']); //halaman awal
 
     // masukkan rooute yang perlu diautentikasi disini
     Route::group(['prefix' => 'user'], function () {
+        Route::get('/', [UserController::class, 'index']); //halaman awal
         Route::post('/list', [UserController::class, 'list']);  //data user (json)
         Route::get('/create', [UserController::class, 'create']); //form tambah user
         Route::post('/', [UserController::class, 'store']); //data user baru
