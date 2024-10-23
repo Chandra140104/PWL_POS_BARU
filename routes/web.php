@@ -82,7 +82,7 @@ Route::middleware(['auth'])->group(function(){
     });
     
     //Semua route di grup ini harus punya role ADM (Administrator)
-    Route::group(['prefix' => 'level', 'middleware'=> 'authorize:ADM'], function(){
+    Route::group(['prefix' => 'level', 'middleware'=> 'authorize:ADM,MNG'], function(){
         Route::get('/', [LevelController::class, 'index']);                             //menampilkan laman awal level
         Route::post('/list', [LevelController::class, 'list']);                         //menampilkan data level dalam bentuk json untuk datatables
         Route::get('/create_ajax', [LevelController::class, 'create_ajax']);            //menampilkan laman form tambah level AJAX
