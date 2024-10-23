@@ -104,7 +104,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);       //menampilkan form confirm hapus data kategori AJAX
         Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);     //menghapus data kategori AJAX
     });
-    
+
     //Semua route di grup ini harus punya role ADM (Administrator)
     Route::group(['prefix' => 'supplier', 'middleware'=> 'authorize:ADM'], function(){
         Route::get('/', [SupplierController::class, 'index']);                              //menampilkan laman awal supplier
@@ -129,7 +129,6 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);       //menghapus data barang AJAX
     });
 });
-
 
 // Route::get('/', [WelcomeController::class, 'index']);
 
