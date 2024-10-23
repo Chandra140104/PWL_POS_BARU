@@ -55,7 +55,7 @@
                         <!-- /.col -->
                     </div>
                     <br>
-                    <p>Don't have an account? <a href="{{ url('signup') }}">Register</a></p>
+                    <p>Don't have an account? <a href="{{ url('signup') }}">Sign up</a></p>
                 </form>
             </div>
             <!-- /.card-body -->

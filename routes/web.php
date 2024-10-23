@@ -52,8 +52,8 @@ use Illuminate\Support\Facades\Route;
 // Js 7 | Auth
 Route::pattern('id', '[0-9]+'); //ketika ada parameter {id}, maka harus berupa angka
 
-// Route::get('signup', [RegistrationController::class, 'registration'])->name('signup');
-// Route::post('signup', [RegistrationController::class, 'store']);
+Route::get('signup', [RegistrationController::class, 'registration'])->name('signup');
+Route::post('signup', [RegistrationController::class, 'store']);
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
