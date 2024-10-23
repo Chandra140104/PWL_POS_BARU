@@ -34,14 +34,7 @@
         </div>
       <table class="table table-bordered table-striped table-hover table-sm" id="table_user"> 
         <thead> 
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Nama</th>
-            <th>Level Pengguna</th>
-            <th>Foto Profil</th>
-            <th>Aksi</th>
-          </tr> 
+          <tr><th>ID</th><th>Username</th><th>Nama</th><th>Level Pengguna</th><th>Aksi</th></tr> 
         </thead> 
     </table> 
   </div> 
@@ -71,45 +64,38 @@
                 d.level_id = $('#level_id').val();
               }
           }, 
-          columns: [
-  {
-    data: "DT_RowIndex",
-    className: "text-center",
-    orderable: false,
-    searchable: false
-  },
-  {
-    data: "username",
-    orderable: true,
-    searchable: true
-  },
-  {
-    data: "nama",
-    orderable: true,
-    searchable: true
-  },
-  {
-    data: "level.level_nama",
-    orderable: false,
-    searchable: false
-  },
-  {
-    data: "file_profil", // Kolom untuk foto profil
-    className: "text-center",
-    orderable: false,
-    searchable: false,
-    render: function (data, type, row) {
-      return data; // Gambar sudah dirender di server-side, cukup kembalikan datanya
-    }
-  },
-  {
-    data: "aksi",
-    orderable: false,
-    searchable: false
-  }
-]
-
-          
+          columns: [ 
+            { 
+             // nomor urut dari laravel datatable addIndexColumn() 
+             data: "DT_RowIndex",             
+              className: "text-center", 
+              orderable: false, 
+              searchable: false     
+            },{ 
+              data: "username",                
+              className: "", 
+              // orderable: true, jika ingin kolom ini bisa diurutkan  
+              orderable: true,     
+              // searchable: true, jika ingin kolom ini bisa dicari 
+              searchable: true     
+            },{ 
+              data: "nama",                
+              className: "", 
+              orderable: true,     
+              searchable: true     
+            },{ 
+              // mengambil data level hasil dari ORM berelasi 
+              data: "level.level_nama",                
+              className: "", 
+              orderable: false,     
+              searchable: false     
+            },{ 
+              data: "aksi",                
+              className: "", 
+              orderable: false,     
+              searchable: false     
+            } 
+          ] 
       }); 
       $('#level_id').on('change', function(){
         dataUser.ajax.reload();
