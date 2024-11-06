@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LevelController;
+use App\Http\Controllers\Api\UserController; // untuk m_user
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request){
     return $request->user();
 });
 Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('logout');
+
+// untuk m_user
+Route::get('user', [UserController::class, 'index']);
+Route::post('user', [UserController::class, 'store']);
+Route::get('user/{user}', [UserController::class, 'show']);
+Route::put('user/{user}', [UserController::class, 'update']);
+Route::delete('user/{user}', [UserController::class, 'destroy']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
