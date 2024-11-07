@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\LevelController;
 use App\Http\Controllers\Api\UserController; // untuk m_user
 use App\Http\Controllers\Api\KategoriController; // untuk m_kategori
 use App\Http\Controllers\Api\BarangController; //untuk m_barang
-
+use App\Http\Controllers\Api\PenjualanController; //untuk m_barang
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -52,6 +52,16 @@ Route::get('barang/{barang}', [BarangController::class, 'show']);
 Route::put('barang/{barang}', [BarangController::class, 'update']);
 Route::delete('barang/{barang}', [BarangController::class, 'destroy']);
 
+
+
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+// untuk t_pejualan
+
+Route::get('penjualan', [PenjualanController::class, 'index']);
+Route::post('penjualan', [PenjualanController::class, 'store']);
+Route::get('penjualan/{penjualan}', [PenjualanController::class, 'show']);
+Route::put('penjualan/{penjualan}', [PenjualanController::class, 'update']);
+Route::delete('penjualan/{penjualan}', [PenjualanController::class, 'destroy']);

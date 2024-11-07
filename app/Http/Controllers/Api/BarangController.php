@@ -5,69 +5,112 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\BarangModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BarangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __invoke(Request $request)
+    {
+        // remove token
+        $removeToken = JWTAuth::invalidate(JWTAuth::getToken());
+
+        if ($removeToken) {
+            // return response JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Logout Berhasil!',
+            ]);
+        }
+    }
     public function index()
     {
         return BarangModel::all();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $rules = [
+            'barang_kode' => 'required|string|min:3|unique:m_barang,barang_kode',
+            'barang_nama' => 'required|string|max:100',
+            'harga_beli' => 'required|integer',
+            'harga_jual' => 'required|integer',
+            'kategori_id' => 'required|integer',
+            'image' => 'required'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
         $barang = BarangModel::create($request->all());
-        return response()->json($barang,201);
+        $image = $request->image;
+        $request->file('image')->storeAs('posts', $image->hashName(), 'public');
+        $barang = BarangModel::create([
+            'barang_kode' => $request->barang_kode,
+            'barang_nama' => $request->barang_nama,
+            'harga_beli' => $request->harga_beli,
+            'harga_jual' => $request->harga_jual,
+            'kategori_id' => $request->kategori_id,
+            'image' => $image->hashName(),
+        ]);
+        return response()->json($barang, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(BarangModel $barang)
     {
         return BarangModel::find($barang);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, BarangModel $barang)
     {
-        $barang->update($request->all());
-        return BarangModel::find($barang);
+        $rules = [
+            'barang_kode' => 'required|string|min:3|max:10|unique:m_barang,barang_kode,' . $barang->barang_id . ',barang_id',
+            'barang_nama' => 'required|string|max:100',
+            'harga_beli' => 'required|integer',
+            'harga_jual' => 'required|integer',
+            'kategori_id' => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $check = BarangModel::find($barang->barang_id);
+        if ($check) {
+            $check->update($request->all());
+            $image = $request->image;
+            $oldFile = 'posts/' . $image->hashName();
+            if (Storage::disk('public')->exists($oldFile)) {
+                Storage::disk('public')->delete($oldFile);
+            }
+            $request->file('image')->storeAs('posts', $image->hashName(), 'public');
+            $check->update([
+                'barang_kode' => $request->barang_kode,
+                'barang_nama' => $request->barang_nama,
+                'harga_beli' => $request->harga_beli,
+                'harga_jual' => $request->harga_jual,
+                'kategori_id' => $request->kategori_id,
+                'image' => $image->hashName(),
+            ]);
+            return response()->json($check);
+        } else {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(BarangModel $barang)
     {
         $barang->delete();
-
         return response()->json([
-            'success'   => true,
-            'message'   => 'Data Terhapus',
+            'success' => true,
+            'message' => 'Data terhapus',
         ]);
     }
 }
